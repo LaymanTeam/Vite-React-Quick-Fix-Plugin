@@ -10,6 +10,9 @@ A lightweight Vite plugin that enhances React development workflow by adding qui
 - Supports multiple export types
 - Zero impact on production builds
 - Minimal runtime overhead
+- Dev-focused, and only works while in development mode
+- Takes flexible properties so it can work with any IDE that takes a URL file:// entry point
+- Is pure CSS, HTML, and JSX meaning it can work in more scenarios than just CRA
 
 ## 📦 Installation
 
@@ -39,14 +42,15 @@ export default defineConfig({
 
 ## ⚙️ Configuration Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| editor | string | 'vscode://file' | URL protocol for your editor |
-| baseFilePath | string | process.cwd() | Base path for resolving component files |
+| Option       | Type   | Default         | Description                             |
+| ------------ | ------ | --------------- | --------------------------------------- |
+| editor       | string | 'vscode://file' | URL protocol for your editor            |
+| baseFilePath | string | process.cwd()   | Base path for resolving component files |
 
 ## 🤔 How It's Different
 
 Unlike ClickToComponent and similar tools that modify the React DevTools or require browser extensions, this plugin:
+
 - Works directly in your development environment
 - Requires no additional browser extensions
 - Integrates seamlessly with Vite's build process
@@ -55,11 +59,10 @@ Unlike ClickToComponent and similar tools that modify the React DevTools or requ
 
 ## ⚠️ Limitations
 
-- Only works in development mode
 - Currently supports VS Code by default (other editors need custom URL protocols)
 - Only detects components with standard React patterns
 - May have minor performance impact on large applications with many components
-- Does not support source maps in the current version
+- Does not support source maps in the current version, we chose this to handle larger projects quickly
 
 ## 🔍 Requirements
 
@@ -73,13 +76,12 @@ We welcome contributions! We're particularly interested in:
 
 - Adding support for more editors
 - Improving component detection
-- Adding source map support
-- Optimizing performance
 - Adding tests
 
 ### For Maintainers
 
 To maintain this plugin, you should be familiar with:
+
 - Vite's Plugin API
 - React/Preact internals
 - AST manipulation
