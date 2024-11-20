@@ -82,12 +82,16 @@ export default function vitePluginReactComponentOpener(options: PluginOptions = 
     baseFilePath = process.cwd()
   } = options;
 
+  let isDev = false; // Add this flag
+
   return {
     name: 'vite-plugin-react-component-opener',
-    apply: 'serve',
+    apply: 'serve', // This already ensures we only run in dev mode
 
-    configResolved() {
-      if (import.meta.env.DEV) {
+    configResolved(config) {
+      isDev = config.command === 'serve'; // Set the flag based on Vite's command
+      
+      if (isDev) {
         setInterval(clearComponentCache, 300000); // Clear every 5 minutes
       }
     },
@@ -100,7 +104,7 @@ export default function vitePluginReactComponentOpener(options: PluginOptions = 
       id: string,
       options?: { ssr?: boolean }
     ): Promise<TransformResult | null> | TransformResult | null {
-      if (!isValidFile(id) || !import.meta.env.DEV) return null;
+      if (!isValidFile(id) || !isDev) return null; // Use our flag instead of import.meta.env.DEV
 
       try {
         if (!isReactComponent(code)) {
