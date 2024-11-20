@@ -90,7 +90,7 @@ To maintain this plugin, you should be familiar with:
 
 ## 📝 License
 
-MIT
+CC-BY-NC 2.0
 
 ## 🙏 Credits
 
