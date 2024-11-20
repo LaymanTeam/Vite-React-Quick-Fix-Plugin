@@ -21,3 +21,8 @@ Thumbs.db
 # Test
 *.test.ts
 *.test.tsx
+
+# Package manager
+*.tgz
+.npmrc
+.npm
