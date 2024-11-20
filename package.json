@@ -1,5 +1,5 @@
 {
-  "name": "vite-react-quick-fix-plugin",
+  "name": "@laymanteam/vite-react-quick-fix-plugin",
   "version": "1.0.0",
   "description": "A Vite plugin that adds quick-access editor buttons to React components during development",
   "main": "dist/index.js",
