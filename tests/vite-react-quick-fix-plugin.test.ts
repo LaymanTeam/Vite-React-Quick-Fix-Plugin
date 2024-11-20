@@ -5,9 +5,14 @@ import type { TransformResult } from '../src/types';
 
 describe('vite-react-quick-fix-plugin', () => {
   let plugin: Plugin;
+  let transform: (code: string, id: string) => TransformResult | null;
 
   beforeEach(() => {
     plugin = vitePluginReactComponentOpener();
+    if (!plugin.transform || typeof plugin.transform !== 'function') {
+      throw new Error('transform is not a function');
+    }
+    transform = plugin.transform.bind({ ...plugin } as unknown as TransformPluginContext);
   });
 
   it('should create plugin with default options', () => {
@@ -24,10 +29,6 @@ describe('vite-react-quick-fix-plugin', () => {
   });
 
   describe('transform', () => {
-    if (!plugin.transform || typeof plugin.transform !== 'function') {
-      throw new Error('transform is not a function');
-    }
-    const transform = plugin.transform.bind({ ...plugin } as unknown as TransformPluginContext);
 
     it('should skip non-react files', () => {
       const result = transform(
