@@ -24,5 +24,4 @@ Thumbs.db
 
 # Package manager
 *.tgz
-.npmrc
 .npm
