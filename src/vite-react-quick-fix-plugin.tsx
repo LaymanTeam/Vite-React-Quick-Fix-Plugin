@@ -11,21 +11,47 @@ function isValidFile(file: string): boolean {
   return /\.(js|jsx|ts|tsx)$/.test(file);
 }
 
+// Create a memoized patterns array at module level
+const REACT_PATTERNS: ReadonlyArray<RegExp> = Object.freeze([
+  /import\s+.*\s+from\s+['"]react['"]/,
+  /extends\s+React\.Component/,
+  /React\.createElement/,
+  /jsx/i,
+  /<[A-Z][A-Za-z0-9]*/, // JSX component
+  /return\s*\(/  // Likely a functional component
+]);
+
+// Create a simple cache for isReactComponent results
+const componentCache = new Map<string, boolean>();
+
 /**
- * Detects if code contains React component patterns
+ * Detects if code contains React component patterns with memoization
  * @param {string} code - Source code to analyze
  * @returns {boolean} True if code contains React patterns
  */
 function isReactComponent(code: string): boolean {
-  const reactPatterns = [
-    /import\s+.*\s+from\s+['"]react['"]/,
-    /extends\s+React\.Component/,
-    /React\.createElement/,
-    /jsx/i,
-    /<[A-Z][A-Za-z0-9]*/, // JSX component
-    /return\s*\(/  // Likely a functional component
-  ];
-  return reactPatterns.some(pattern => pattern.test(code));
+  // Use cache if available
+  const cached = componentCache.get(code);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  // Check patterns and cache result
+  const result = REACT_PATTERNS.some(pattern => pattern.test(code));
+  
+  // Only cache if the cache isn't too large (prevent memory leaks)
+  if (componentCache.size < 1000) {
+    componentCache.set(code, result);
+  }
+
+  return result;
+}
+
+// Add a cleanup function to periodically clear the cache
+function clearComponentCache(): void {
+  if (componentCache.size > 800) { // Clear when approaching limit
+    componentCache.clear();
+  }
 }
 
 /**
@@ -59,6 +85,16 @@ export default function vitePluginReactComponentOpener(options: PluginOptions = 
   return {
     name: 'vite-plugin-react-component-opener',
     apply: 'serve',
+
+    configResolved() {
+      if (import.meta.env.DEV) {
+        setInterval(clearComponentCache, 300000); // Clear every 5 minutes
+      }
+    },
+
+    buildEnd() {
+      componentCache.clear();
+    },
     transform(code: string, id: string): TransformResult {
       if (!isValidFile(id) || !import.meta.env.DEV) return null;
 
@@ -145,6 +181,7 @@ const OpenInEditorButton = ({ fileName, editorUrl }) => {
         };
       } catch (error) {
         console.error(`Error injecting OpenInEditor in ${id}: ${error}`);
+        componentCache.delete(code); // Remove failed entries from cache
         return null;
       }
     },
