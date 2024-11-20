@@ -39,3 +39,28 @@ export interface TransformResult {
   code: string;
   map: null | object;
 }
+
+/**
+ * Function to validate file extensions
+ */
+export type FileValidator = (file: string) => boolean;
+
+/**
+ * Function to detect React components
+ */
+export type ComponentDetector = (code: string) => boolean;
+
+/**
+ * Pattern for detecting React components
+ */
+export type ReactPattern = RegExp;
+
+/**
+ * Transform function result
+ */
+export type TransformFunctionResult = TransformResult | null;
+
+/**
+ * Transform function type
+ */
+export type TransformFunction = (code: string, id: string) => TransformFunctionResult;
