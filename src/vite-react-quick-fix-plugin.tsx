@@ -1,6 +1,7 @@
 import { Plugin } from 'vite';
 import { parse, normalize } from 'path';
 import type { PluginOptions, TransformResult } from './types';
+import { SourceMapInput } from 'rollup';
 
 /**
  * Checks if a file is a valid JavaScript/TypeScript file
