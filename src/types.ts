@@ -1,4 +1,4 @@
-import type { Plugin, TransformResult as ViteTransformResult } from 'vite';
+import type { Plugin } from 'vite';
 import type { SourceMapInput } from 'rollup';
 
 /**
