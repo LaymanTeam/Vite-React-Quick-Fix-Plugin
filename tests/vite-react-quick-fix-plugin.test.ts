@@ -109,21 +109,24 @@ describe('vite-react-quick-fix-plugin', () => {
         import React from 'react';
         export const Test = () => <div>Test</div>;
       `;
-      expect(transform(code, 'test.tsx')).not.toBeNull();
+      const boundTransform = transform.bind({ ...plugin } as unknown as TransformPluginContext);
+      expect(boundTransform(code, 'test.tsx')).not.toBeNull();
     });
 
     it('should detect JSX syntax', () => {
       const code = `
         export const Test = () => <div>Test</div>;
       `;
-      expect(transform(code, 'test.tsx')).not.toBeNull();
+      const boundTransform = transform.bind({ ...plugin } as unknown as TransformPluginContext);
+      expect(boundTransform(code, 'test.tsx')).not.toBeNull();
     });
 
     it('should detect React.createElement', () => {
       const code = `
         export const Test = () => React.createElement('div', null, 'Test');
       `;
-      expect(transform(code, 'test.tsx')).not.toBeNull();
+      const boundTransform = transform.bind({ ...plugin } as unknown as TransformPluginContext);
+      expect(boundTransform(code, 'test.tsx')).not.toBeNull();
     });
   });
 });
