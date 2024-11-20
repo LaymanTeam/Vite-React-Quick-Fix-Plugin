@@ -1,5 +1,6 @@
 import vitePluginReactComponentOpener from '../src/vite-react-quick-fix-plugin';
-import { Plugin } from 'vite';
+import { Plugin, TransformPluginContext } from 'vite';
+import type { TransformResult } from '../src/types';
 
 describe('vite-react-quick-fix-plugin', () => {
   let plugin: Plugin;
@@ -25,7 +26,7 @@ describe('vite-react-quick-fix-plugin', () => {
     if (!plugin.transform || typeof plugin.transform !== 'function') {
       throw new Error('transform is not a function');
     }
-    const transform = plugin.transform;
+    const transform = plugin.transform.bind({ ...plugin } as unknown as TransformPluginContext);
 
     it('should skip non-react files', () => {
       const result = transform(
@@ -61,11 +62,10 @@ describe('vite-react-quick-fix-plugin', () => {
       const result = transform(code, 'TestComponent.tsx');
       
       expect(result).not.toBeNull();
-      if (result && typeof result !== 'string') {
-        expect(result.code).toContain('OpenInEditorButton');
-        expect(result.code).toContain('TestComponent.tsx');
-        expect(result.code).toContain('vscode://file');
-      }
+      const transformResult = result as TransformResult;
+      expect(transformResult.code).toContain('OpenInEditorButton');
+      expect(transformResult.code).toContain('TestComponent.tsx');
+      expect(transformResult.code).toContain('vscode://file');
     });
 
     it('should handle different export types', () => {
