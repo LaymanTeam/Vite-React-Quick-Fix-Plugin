@@ -1,0 +1,31 @@
+# Source
+src/
+tests/
+
+# Config files
+.eslintrc*
+.prettierrc*
+jest.config.js
+tsconfig.json
+.github/
+.vscode/
+.idea/
+.aider*
+
+# Development files
+*.test.ts
+*.test.tsx
+coverage/
+.env
+*.log
+
+# Git files
+.git/
+.gitignore
+
+# Build process
+node_modules/
+.DS_Store
+
+# Keep dist folder (already specified in package.json files)
+!dist/

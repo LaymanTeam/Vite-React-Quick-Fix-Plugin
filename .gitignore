@@ -1,8 +1,23 @@
+# Development
 .aider*
 .env
-
-node_modules
-dist
-.DS_Store
+.vscode/
+.idea/
 *.log
-coverage
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build
+dist/
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+*.test.ts
+*.test.tsx
