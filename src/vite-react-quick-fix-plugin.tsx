@@ -1,15 +1,21 @@
-import { Plugin, TransformResult } from 'vite';
+import { Plugin } from 'vite';
 import { parse, normalize } from 'path';
+import type { PluginOptions, TransformResult } from './types';
 
-interface PluginOptions {
-  editor?: string;
-  baseFilePath?: string;
-}
-
+/**
+ * Checks if a file is a valid JavaScript/TypeScript file
+ * @param {string} file - File path to check
+ * @returns {boolean} True if file is a valid JS/TS file
+ */
 function isValidFile(file: string): boolean {
   return /\.(js|jsx|ts|tsx)$/.test(file);
 }
 
+/**
+ * Detects if code contains React component patterns
+ * @param {string} code - Source code to analyze
+ * @returns {boolean} True if code contains React patterns
+ */
 function isReactComponent(code: string): boolean {
   const reactPatterns = [
     /import\s+.*\s+from\s+['"]react['"]/,
@@ -22,6 +28,28 @@ function isReactComponent(code: string): boolean {
   return reactPatterns.some(pattern => pattern.test(code));
 }
 
+/**
+ * Creates a Vite plugin that adds quick-access editor buttons to React components
+ * during development.
+ * 
+ * @param {PluginOptions} options - Plugin configuration options
+ * @returns {Plugin} Vite plugin instance
+ * 
+ * @example
+ * ```ts
+ * // vite.config.ts
+ * import reactQuickFix from 'vite-react-quick-fix-plugin'
+ * 
+ * export default defineConfig({
+ *   plugins: [
+ *     reactQuickFix({
+ *       editor: 'vscode://file',
+ *       baseFilePath: process.cwd()
+ *     })
+ *   ]
+ * })
+ * ```
+ */
 export default function vitePluginReactComponentOpener(options: PluginOptions = {}): Plugin {
   const { 
     editor = 'vscode://file',
