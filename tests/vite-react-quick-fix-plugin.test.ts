@@ -1,5 +1,6 @@
 import vitePluginReactComponentOpener from '../src/vite-react-quick-fix-plugin';
-import { Plugin, TransformPluginContext } from 'vite';
+import { Plugin } from 'vite';
+import type { TransformPluginContext } from 'rollup';
 import type { TransformResult } from '../src/types';
 
 describe('vite-react-quick-fix-plugin', () => {
