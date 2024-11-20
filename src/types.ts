@@ -1,4 +1,5 @@
-import type { Plugin } from 'vite';
+import type { Plugin, TransformResult as ViteTransformResult } from 'vite';
+import type { SourceMapInput } from 'rollup';
 
 /**
  * Configuration options for the plugin
@@ -37,7 +38,7 @@ export type PluginFactory = (options?: PluginOptions) => Plugin;
  */
 export interface TransformResult {
   code: string;
-  map: null | object;
+  map?: SourceMapInput | null;
 }
 
 /**
@@ -63,4 +64,8 @@ export type TransformFunctionResult = TransformResult | null;
 /**
  * Transform function type
  */
-export type TransformFunction = (code: string, id: string) => TransformFunctionResult;
+export type TransformFunction = (
+  code: string, 
+  id: string, 
+  options?: { ssr?: boolean }
+) => Promise<TransformResult | null> | TransformResult | null;

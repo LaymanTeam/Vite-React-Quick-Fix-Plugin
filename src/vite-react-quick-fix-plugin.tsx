@@ -95,7 +95,11 @@ export default function vitePluginReactComponentOpener(options: PluginOptions = 
     buildEnd() {
       componentCache.clear();
     },
-    transform(code: string, id: string): TransformResult {
+    transform(
+      code: string, 
+      id: string,
+      options?: { ssr?: boolean }
+    ): Promise<TransformResult | null> | TransformResult | null {
       if (!isValidFile(id) || !import.meta.env.DEV) return null;
 
       try {
@@ -177,7 +181,7 @@ const OpenInEditorButton = ({ fileName, editorUrl }) => {
 
         return {
           code: code,
-          map: null, // We're not handling source maps in this simplified version
+          map: null as SourceMapInput | null, // explicitly type the map
         };
       } catch (error) {
         console.error(`Error injecting OpenInEditor in ${id}: ${error}`);
