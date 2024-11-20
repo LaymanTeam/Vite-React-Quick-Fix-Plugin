@@ -2,6 +2,8 @@
 
 A lightweight Vite plugin that enhances React development workflow by adding quick-access editor buttons to your components during development.
 
+Github: https://github.com/LaymanTeam/Vite-React-Quick-Fix-Plugin 
+
 ## 🚀 Features
 
 - Adds a hover-activated "Open in Editor" button to React components in development
@@ -9,7 +11,7 @@ A lightweight Vite plugin that enhances React development workflow by adding qui
 - Automatically detects React components
 - Supports multiple export types
 - Zero impact on production builds
-- Minimal runtime overhead
+- Minimal runtime overhead and Zero-depenency
 - Dev-focused, and only works while in development mode
 - Takes flexible properties so it can work with any IDE that takes a URL file:// entry point
 - Is pure CSS, HTML, and JSX meaning it can work in more scenarios than just CRA
