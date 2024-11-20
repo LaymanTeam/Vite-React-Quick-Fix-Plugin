@@ -7,20 +7,18 @@ describe('vite-react-quick-fix-plugin', () => {
   let plugin: Plugin;
   const mockContext = {
     parse: () => ({}),
-    warn: () => {},
-    error: () => {},
+    warn: (msg: string) => console.warn(msg),
+    error: (msg: string) => console.error(msg),
     emitFile: () => '',
     getModuleInfo: () => null,
   } as unknown as TransformPluginContext;
 
   beforeEach(() => {
     plugin = vitePluginReactComponentOpener();
+    if (!plugin.transform || typeof plugin.transform !== 'function') {
+      throw new Error('transform is not a function');
+    }
   });
-
-  const transformWithContext = (code: string, id: string) => {
-    if (!plugin.transform) return null;
-    return plugin.transform.call(mockContext, code, id);
-  };
 
   it('should create plugin with default options', () => {
     expect(plugin.name).toBe('vite-plugin-react-component-opener');
