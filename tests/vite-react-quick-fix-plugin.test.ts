@@ -34,6 +34,10 @@ describe('vite-react-quick-fix-plugin', () => {
   });
 
   describe('transform', () => {
+    if (!plugin.transform || typeof plugin.transform !== 'function') {
+      throw new Error('transform is not a function');
+    }
+    const transform = plugin.transform.bind(mockContext);
 
     it('should skip non-react files', () => {
       const result = transform(
