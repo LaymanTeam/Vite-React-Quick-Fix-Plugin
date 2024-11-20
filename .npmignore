@@ -54,7 +54,6 @@ yarn-debug.log*
 pnpm-debug.log*
 pnpm-lock.yaml
 *.tgz
-.npmrc
 .npm
 
 # Keep dist folder (already specified in package.json files)
