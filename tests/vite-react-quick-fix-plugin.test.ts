@@ -5,7 +5,11 @@ import type { TransformResult } from '../src/types';
 
 describe('vite-react-quick-fix-plugin', () => {
   let plugin: Plugin;
-  let transform: (code: string, id: string) => TransformResult | null;
+  let transform: (
+    code: string, 
+    id: string, 
+    options?: { ssr?: boolean }
+  ) => Promise<TransformResult | null> | TransformResult | null;
 
   beforeEach(() => {
     plugin = vitePluginReactComponentOpener();
