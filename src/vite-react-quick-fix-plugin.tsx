@@ -103,7 +103,7 @@ export default function vitePluginReactComponentOpener(options: PluginOptions = 
     transform(
       code: string, 
       id: string,
-      options?: { ssr?: boolean }
+      _options?: { ssr?: boolean }  // Prefix with underscore to indicate intentionally unused
     ): Promise<TransformResult | null> | TransformResult | null {
       if (!isValidFile(id) || !isDev) return null; // Use our flag instead of import.meta.env.DEV
 
