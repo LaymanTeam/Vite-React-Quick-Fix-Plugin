@@ -1,19 +1,45 @@
 {
   "name": "vite-react-quick-fix-plugin",
   "version": "1.0.0",
-  "description": "A plugin that allows you to open your IDE via a html button and constructed URL to edit any react component, using clean HTML, CSS, and Javascript to be more flexible and performant than similar tools like ClickToComponent. ",
-  "main": "index.tsx",
+  "description": "A Vite plugin that adds quick-access editor buttons to React components during development",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup src/vite-react-quick-fix-plugin.tsx index.ts --format cjs,esm --dts",
+    "test": "jest",
+    "lint": "eslint . --ext .ts,.tsx",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "Vite",
-    "React",
+    "vite",
+    "plugin",
+    "react", 
+    "development",
+    "developer-tools",
     "ClickToComponent",
     "Quick-fix",
     "IDE",
     "Vscode"
   ],
   "author": "Esosa O.",
-  "license": "MIT"
+  "license": "MIT",
+  "peerDependencies": {
+    "vite": "^2.0.0 || ^3.0.0 || ^4.0.0",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "tsup": "^7.0.0",
+    "typescript": "^4.0.0"
+  }
 }
