@@ -1,7 +1,6 @@
 # Development
 .aider*
 .env
-CHANGELOG.md
 .vscode/
 .idea/
 *.log
