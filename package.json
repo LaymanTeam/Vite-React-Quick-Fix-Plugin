@@ -1,0 +1,19 @@
+{
+  "name": "vite-react-quick-fix-plugin",
+  "version": "1.0.0",
+  "description": "A plugin that allows you to open your IDE via a html button and constructed URL to edit any react component, using clean HTML, CSS, and Javascript to be more flexible and performant than similar tools like ClickToComponent. ",
+  "main": "index.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Vite",
+    "React",
+    "ClickToComponent",
+    "Quick-fix",
+    "IDE",
+    "Vscode"
+  ],
+  "author": "Esosa O.",
+  "license": "MIT"
+}
