@@ -8,7 +8,7 @@ import type { ComponentInfo } from '../tracker/types';
  */
 export function createEditorButton(
   componentInfo: ComponentInfo,
-  editorProtocol: string
+  editorProtocol
 ): string {
   const editorUrl = `${editorProtocol}/${encodeURIComponent(componentInfo.sourcePath)}`;
   
