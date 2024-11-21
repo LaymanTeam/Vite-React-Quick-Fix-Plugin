@@ -11,13 +11,13 @@ export class ComponentTracker {
     this.debug = options.debug || false;
   }
 
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  private log(...args: any[]) {
+  private log(...args: unknown[]) {
     if (this.debug) {
+      // Using console.log is actually intended here for debugging
+      // eslint-disable-next-line no-console
       console.log('[QuickFix]', ...args);
     }
   }
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   injectTracking(code: string, id: string, editorProtocol: string): { code: string; map: null } {
     const componentInfo: ComponentInfo = {
