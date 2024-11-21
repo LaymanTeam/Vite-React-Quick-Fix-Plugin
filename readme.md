@@ -2,7 +2,7 @@
 
 A lightweight Vite plugin that enhances React development workflow by adding quick-access editor buttons to your components during development.
 
-Github: https://github.com/LaymanTeam/Vite-React-Quick-Fix-Plugin 
+Github: https://github.com/LaymanTeam/Vite-React-Quick-Fix-Plugin
 
 ## 🚀 Features
 
@@ -30,7 +30,7 @@ Add to your `vite.config.ts`:
 
 ```typescript
 import { defineConfig } from 'vite'
-import reactQuickFix from 'vite-react-quick-fix-plugin'
+import {reactQuickFix} from 'vite-react-quick-fix-plugin'
 
 export default defineConfig({
   plugins: [
