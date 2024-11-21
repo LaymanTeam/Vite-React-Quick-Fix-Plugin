@@ -1,8 +1,6 @@
 import type { ComponentInfo } from '../tracker/types';
 import { createEditorButton } from './buttonCreator';
 
-const componentCache = new Map<string, string>();
-
 /**
  * Injects tracking code around component return statements
  */
@@ -11,18 +9,12 @@ export function injectTrackingCode(
   componentInfo: ComponentInfo,
   editorProtocol: string
 ): string {
-  const cacheKey = `${code}-${componentInfo.id}-${editorProtocol}`;
-  const cached = componentCache.get(cacheKey);
-  if (cached) return cached;
-
   // Only process files that look like components
   if (!code.includes('return')) {
     return code;
   }
 
-  const buttonCode = createEditorButton(componentInfo, editorProtocol);
-  
-  // Match return statements in components
+  // Match return statements that use JSX or createElement
   const returnStatementRegex = /return\s*\(\s*(?:<|\w+\.createElement)/g;
   
   if (!returnStatementRegex.test(code)) {
@@ -32,48 +24,28 @@ export function injectTrackingCode(
   // Reset regex lastIndex
   returnStatementRegex.lastIndex = 0;
 
-  // Replace each return statement with wrapped version
+  // Replace each return statement with wrapped version using createElement
   let modifiedCode = code.replace(returnStatementRegex, (match) => {
-    return `return __withTracking((props) => ${match})(props)`;
+    return `return createElement(
+      'div',
+      { 
+        style: { position: 'relative' },
+        'data-quick-fix-container': true,
+        'data-source-path': '${componentInfo.sourcePath}'
+      },
+      [
+        ${match.substring(6)},
+        ${createEditorButton(componentInfo, editorProtocol)}
+      ]
+    )`;
   });
 
-  // Add necessary imports and wrapper function
+  // Add necessary imports at the start
   modifiedCode = `
-    import { createElement, Fragment, useEffect } from 'react';
-
-    const __withTracking = (WrappedComponent) => {
-      return (props) => {
-        useEffect(() => {
-          try {
-            window.__QUICK_FIX_COMPONENTS__ = window.__QUICK_FIX_COMPONENTS__ || new Map();
-            window.__QUICK_FIX_COMPONENTS__.set('${componentInfo.id}', ${JSON.stringify(componentInfo)});
-            return () => {
-              window.__QUICK_FIX_COMPONENTS__?.delete('${componentInfo.id}');
-            };
-          } catch (error) {
-            console.warn('[Quick-Fix] Failed to track component:', error);
-          }
-        }, []);
-
-        return createElement(
-          'div',
-          { 
-            style: { position: 'relative' },
-            'data-quick-fix-container': true,
-            'data-component-id': '${componentInfo.id}'
-          },
-          [
-            createElement(WrappedComponent, {...props}),
-            ${buttonCode}
-          ]
-        );
-      };
-    };
-
+    import { createElement, Fragment } from 'react';
     ${modifiedCode}
   `;
 
-  componentCache.set(cacheKey, modifiedCode);
   return modifiedCode;
 }
 import type { ComponentInfo } from '../tracker/types';
