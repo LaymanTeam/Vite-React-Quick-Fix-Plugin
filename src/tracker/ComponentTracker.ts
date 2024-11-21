@@ -1,11 +1,10 @@
 import type { ComponentInfo } from './types';
-import type { TrackerOptions } from './types';
 import { injectTrackingCode } from '../injection/codeInjector';
 
 export class ComponentTracker {
   private mountedComponents = new Map<string, ComponentInfo>();
   private disposables: (() => void)[] = [];
-  constructor(options: TrackerOptions = {}) {
+  constructor() {
   }
 
   injectTracking(code: string, id: string, editorProtocol: string): { code: string; map: null } {
