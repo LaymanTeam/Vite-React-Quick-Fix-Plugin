@@ -30,4 +30,10 @@ export class ComponentTracker {
   }
 
   dispose(): void {} // Cleanup if needed
+
+  refreshComponents(): void {
+    // Since we're using file-based tracking now rather than runtime tracking,
+    // we just need to trigger a HMR update
+    // This method is called when components need to be re-processed
+  }
 }
