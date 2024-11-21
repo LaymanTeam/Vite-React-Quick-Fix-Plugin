@@ -6,7 +6,8 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "scripts"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
@@ -15,7 +16,8 @@
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",
     "dev": "npm run build -- --watch",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "postinstall": "node scripts/init-semantic-release.js"
   },
   "keywords": [
     "vite",
