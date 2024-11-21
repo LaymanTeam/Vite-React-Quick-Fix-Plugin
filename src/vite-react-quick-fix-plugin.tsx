@@ -77,7 +77,7 @@ function clearComponentCache(): void {
  * })
  * ```
  */
-export default function vitePluginReactComponentOpener(options: PluginOptions = {}): Plugin {
+export default function reactQuickFix(options: PluginOptions = {}): Plugin {
   const { 
     editor = 'vscode://file',
     baseFilePath = process.cwd()
