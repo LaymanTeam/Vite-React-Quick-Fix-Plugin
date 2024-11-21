@@ -1,6 +1,15 @@
 import type { ComponentInfo } from '../tracker/types';
 
-export function createEditorButton(componentInfo: ComponentInfo, editorProtocol: string = 'vscode://file'): string {
+/**
+ * Creates a React element string representation of an editor button
+ * @param componentInfo Information about the component to open
+ * @param editorProtocol The editor protocol URL (e.g. 'vscode://file')
+ * @returns A string containing the React createElement call for the button
+ */
+export function createEditorButton(
+  componentInfo: ComponentInfo,
+  editorProtocol: string
+): string {
   const editorUrl = `${editorProtocol}/${encodeURIComponent(componentInfo.sourcePath)}`;
   
   return `
