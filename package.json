@@ -12,12 +12,10 @@
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "test": "jest",
     "lint": "eslint . --ext .ts,.tsx",
-    "prepare": "npm run build",
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",
     "dev": "npm run build -- --watch",
-    "semantic-release": "semantic-release",
-    "init-release": "node scripts/init-semantic-release.js"
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "vite",
