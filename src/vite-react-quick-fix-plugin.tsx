@@ -1,4 +1,4 @@
-import type { Plugin, UserConfig, ConfigEnv } from 'vite';
+import type { Plugin } from 'vite';
 import { parse, normalize } from 'path';
 import type { PluginOptions, TransformResult } from './types';
 import { SourceMapInput } from 'rollup';
@@ -87,9 +87,9 @@ export default function reactQuickFix(options: PluginOptions = {}): Plugin {
 
   return {
     name: 'vite-plugin-react-component-opener',
-    apply: 'serve' as const, // This already ensures we only run in dev mode
+    apply: 'serve', // This already ensures we only run in dev mode
 
-    configResolved(config: UserConfig) {
+    configResolved(config) {
       isDev = config.command === 'serve'; // Set the flag based on Vite's command
       
       if (isDev) {
@@ -100,11 +100,7 @@ export default function reactQuickFix(options: PluginOptions = {}): Plugin {
     buildEnd() {
       componentCache.clear();
     },
-    transform(
-      code: string, 
-      id: string,
-      _options?: { ssr?: boolean }  // Prefix with underscore to indicate intentionally unused
-    ): Promise<TransformResult | null> | TransformResult | null {
+    transform(code: string, id: string): TransformResult | null {
       if (!isValidFile(id) || !isDev) return null; // Use our flag instead of import.meta.env.DEV
 
       try {
@@ -194,5 +190,5 @@ const OpenInEditorButton = ({ fileName, editorUrl }) => {
         return null;
       }
     },
-  };
+  } as Plugin;
 }
