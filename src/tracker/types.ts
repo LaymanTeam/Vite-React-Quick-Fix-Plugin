@@ -6,6 +6,5 @@ export interface ComponentInfo {
 }
 
 export interface TrackerOptions {
-  debug?: boolean;
   cleanupInterval?: number;
 }

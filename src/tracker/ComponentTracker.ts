@@ -5,19 +5,7 @@ import { injectTrackingCode } from '../injection/codeInjector';
 export class ComponentTracker {
   private mountedComponents = new Map<string, ComponentInfo>();
   private disposables: (() => void)[] = [];
-  private debug: boolean;
-
   constructor(options: TrackerOptions = {}) {
-    this.debug = options.debug || false;
-  }
-
-  /* @internal */
-  private log(...args: unknown[]) {
-    if (this.debug) {
-      // Using console.log is actually intended here for debugging
-      // eslint-disable-next-line no-console
-      console.log('[QuickFix]', ...args);
-    }
   }
 
   injectTracking(code: string, id: string, editorProtocol: string): { code: string; map: null } {
