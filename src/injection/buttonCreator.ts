@@ -24,7 +24,8 @@ export function createEditorButton(
         position: 'absolute',
         top: '5px',
         right: '5px',
-        display: 'none',
+        opacity: 0,
+        visibility: 'hidden',
         zIndex: 9999,
         padding: '4px 8px',
         backgroundColor: '#007ACC',
@@ -32,7 +33,19 @@ export function createEditorButton(
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
-        fontSize: '12px'
+        fontSize: '12px',
+        transition: 'opacity 0.2s, visibility 0.2s',
+        ':hover': {
+          backgroundColor: '#005999'
+        }
+      },
+      onMouseOver: (e) => {
+        e.currentTarget.style.opacity = '1';
+        e.currentTarget.style.visibility = 'visible';
+      },
+      onMouseOut: (e) => {
+        e.currentTarget.style.opacity = '0';
+        e.currentTarget.style.visibility = 'hidden';
       },
       'data-source-file': '${componentInfo.sourcePath}',
       'data-component-id': '${componentInfo.id}'
