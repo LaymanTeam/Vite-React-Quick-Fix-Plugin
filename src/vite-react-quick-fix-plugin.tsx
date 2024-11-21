@@ -9,6 +9,28 @@ import { ComponentTracker } from './tracker/ComponentTracker';
 const isValidFile = (file: string): boolean => /\.(js|jsx|ts|tsx)$/.test(file);
 
 /**
+ * Resolves editor protocol from plugin options
+ */
+function resolveEditorProtocol(editor: PluginOptions['editor']): string {
+  if (typeof editor === 'string') {
+    return editor;
+  }
+  
+  if (editor && typeof editor === 'object') {
+    const { protocol, args } = editor;
+    if (args) {
+      const queryString = Object.entries(args)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join('&');
+      return `${protocol}?${queryString}`;
+    }
+    return protocol;
+  }
+  
+  return 'vscode://file'; // default fallback
+}
+
+/**
  * Creates a Vite plugin that adds quick-access editor buttons to React components
  * during development.
  * 
@@ -23,6 +45,9 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
 
   // Initialize component tracker
   const tracker = new ComponentTracker();
+  
+  // Resolve editor protocol once during initialization
+  const editorProtocol = resolveEditorProtocol(editor);
 
   return {
     name: 'vite-react-quick-fix-plugin',
@@ -57,7 +82,7 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
           : `${baseFilePath}/${normalizedId}`;
 
         // Inject tracking code
-        return tracker.injectTracking(code, fullPath, editor);
+        return tracker.injectTracking(code, fullPath, editorProtocol);
       } catch (error) {
         console.error(`[vite-react-quick-fix] Error processing ${id}:`, error);
         return null;
