@@ -150,26 +150,36 @@ const OpenInEditorButton = ({ fileName, editorUrl }) => {
           const newExport = isDefault
             ? `export default (props) => {
                 const OriginalComponent = ${componentName};
-                return (
-                  <div style={{ position: 'relative' }}>
-                    <OriginalComponent {...props} />
-                    <OpenInEditorButton fileName="${fileName}" editorUrl="${editorUrl}" />
-                    <style>{
-                      \`div:hover > button { display: block !important; }\`
-                    }</style>
-                  </div>
+                return createElement(
+                  'div',
+                  { style: { position: 'relative' } },
+                  [
+                    createElement(OriginalComponent, props),
+                    createElement(OpenInEditorButton, {
+                      fileName: "${fileName}",
+                      editorUrl: "${editorUrl}"
+                    }),
+                    createElement('style', null, 
+                      'div:hover > button { display: block !important; }'
+                    )
+                  ]
                 );
               };`
             : `export const ${componentName} = (props) => {
                 const OriginalComponent = ${componentName};
-                return (
-                  <div style={{ position: 'relative' }}>
-                    <OriginalComponent {...props} />
-                    <OpenInEditorButton fileName="${fileName}" editorUrl="${editorUrl}" />
-                    <style>{
-                      \`div:hover > button { display: block !important; }\`
-                    }</style>
-                  </div>
+                return createElement(
+                  'div',
+                  { style: { position: 'relative' } },
+                  [
+                    createElement(OriginalComponent, props),
+                    createElement(OpenInEditorButton, {
+                      fileName: "${fileName}",
+                      editorUrl: "${editorUrl}"
+                    }),
+                    createElement('style', null, 
+                      'div:hover > button { display: block !important; }'
+                    )
+                  ]
                 );
               };`;
           
