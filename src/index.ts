@@ -1,5 +1,9 @@
-export { default } from './vite-react-quick-fix-plugin';
-export { default as reactQuickFix } from './vite-react-quick-fix-plugin';
+import reactQuickFixPlugin from './vite-react-quick-fix-plugin';
+
+// Export the plugin as both default and named export
+export default reactQuickFixPlugin;
+export const reactQuickFix = reactQuickFixPlugin;
+
 export type { 
   PluginOptions,
   OpenInEditorButtonProps,

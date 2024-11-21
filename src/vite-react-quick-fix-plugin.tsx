@@ -77,7 +77,7 @@ function clearComponentCache(): void {
  * })
  * ```
  */
-export default function reactQuickFix(options: PluginOptions = {}): Plugin {
+const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
   const { 
     editor = 'vscode://file',
     baseFilePath = process.cwd()
@@ -192,3 +192,5 @@ const OpenInEditorButton = ({ fileName, editorUrl }) => {
     },
   } as Plugin;
 }
+
+export default reactQuickFixPlugin;
