@@ -4,10 +4,13 @@ import { injectTrackingCode } from '../injection/codeInjector';
 export class ComponentTracker {
   private mountedComponents = new Map<string, ComponentInfo>();
   private disposables: (() => void)[] = [];
-  constructor() {
-  }
 
   injectTracking(code: string, id: string, editorProtocol: string): { code: string; map: null } {
+    // Only inject tracking for React component files
+    if (!this.isReactComponent(code)) {
+      return { code, map: null };
+    }
+
     const componentInfo: ComponentInfo = {
       id: this.generateComponentId(id),
       sourcePath: id,
@@ -19,6 +22,14 @@ export class ComponentTracker {
       code: injectTrackingCode(code, componentInfo, editorProtocol),
       map: null
     };
+  }
+
+  private isReactComponent(code: string): boolean {
+    // Basic React component detection
+    const functionComponentPattern = /export\s+(?:const|function)\s+\w+\s*(?:=|\()/;
+    const classComponentPattern = /export\s+class\s+\w+\s+extends\s+(?:React\.)?Component/;
+    
+    return functionComponentPattern.test(code) || classComponentPattern.test(code);
   }
 
   refreshComponents(): void {
