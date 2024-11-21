@@ -7,9 +7,13 @@ import type { SourceMapInput } from 'rollup';
 export interface PluginOptions {
   /**
    * URL protocol for the editor
+   * Can be a string (e.g. 'vscode://file') or an object with protocol and args
    * @default 'vscode://file'
    */
-  editor?: string;
+  editor?: string | {
+    protocol: string;
+    args?: Record<string, string>;
+  };
   
   /**
    * Base path for resolving component files

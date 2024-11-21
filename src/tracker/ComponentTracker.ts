@@ -1,8 +1,21 @@
 import type { ComponentInfo } from './types';
+import type { TrackerOptions } from './types';
+import { injectTrackingCode } from '../injection/codeInjector';
 
 export class ComponentTracker {
   private mountedComponents = new Map<string, ComponentInfo>();
   private disposables: (() => void)[] = [];
+  private debug: boolean;
+
+  constructor(options: TrackerOptions = {}) {
+    this.debug = options.debug || false;
+  }
+
+  private log(...args: any[]) {
+    if (this.debug) {
+      console.log('[QuickFix]', ...args);
+    }
+  }
 
   injectTracking(code: string, id: string, editorProtocol: string): { code: string; map: null } {
     const componentInfo: ComponentInfo = {

@@ -27,6 +27,6 @@ export function createEditorButton(componentInfo: ComponentInfo, editorProtocol:
       },
       'data-source-file': '${componentInfo.sourcePath}',
       'data-component-id': '${componentInfo.id}'
-    }, 'Open ${componentInfo.fileName}')
+    }, 'Open ${componentInfo.fileName.replace(/['"\\]/g, '\\$&')}')
   `;
 }

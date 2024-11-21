@@ -1,14 +1,20 @@
 import type { ComponentInfo } from '../tracker/types';
 import { createEditorButton } from './buttonCreator';
 
+const componentCache = new WeakMap<string, string>();
+
 export function injectTrackingCode(
   code: string,
   componentInfo: ComponentInfo,
   editorProtocol: string
 ): string {
+  const cacheKey = `${code}-${componentInfo.id}-${editorProtocol}`;
+  const cached = componentCache.get(cacheKey);
+  if (cached) return cached;
+
   const buttonCode = createEditorButton(componentInfo, editorProtocol);
   
-  return `
+  const result = `
     import { createElement, Fragment, useEffect } from 'react';
     
     // Original code
@@ -39,4 +45,7 @@ export function injectTrackingCode(
       };
     };
   `;
+
+  componentCache.set(cacheKey, result);
+  return result;
 }
