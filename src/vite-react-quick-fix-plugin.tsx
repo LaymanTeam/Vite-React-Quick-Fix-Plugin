@@ -2,6 +2,7 @@ import type { Plugin } from 'vite';
 import { parse, normalize } from 'path';
 import type { PluginOptions, TransformResult } from './types';
 import { SourceMapInput } from 'rollup';
+import { ComponentTracker } from './tracker/ComponentTracker';
 
 /**
  * Checks if a file is a valid JavaScript/TypeScript file
@@ -12,47 +13,8 @@ function isValidFile(file: string): boolean {
   return /\.(js|jsx|ts|tsx)$/.test(file);
 }
 
-// Create a memoized patterns array at module level
-const REACT_PATTERNS: ReadonlyArray<RegExp> = Object.freeze([
-  /import\s+.*\s+from\s+['"]react['"]/,
-  /extends\s+React\.Component/,
-  /React\.createElement/,
-  /jsx/i,
-  /<[A-Z][A-Za-z0-9]*/, // JSX component
-  /return\s*\(/  // Likely a functional component
-]);
-
-// Create a simple cache for isReactComponent results
-const componentCache = new Map<string, boolean>();
-
-/**
- * Detects if code contains React component patterns with memoization
- * @param {string} code - Source code to analyze
- * @returns {boolean} True if code contains React patterns
- */
-function isReactComponent(code: string): boolean {
-  // Use cache if available
-  const cached = componentCache.get(code);
-  if (cached !== undefined) {
-    return cached;
-  }
-
-  // Check patterns and cache result
-  const result = REACT_PATTERNS.some(pattern => pattern.test(code));
-  
-  // Only cache if the cache isn't too large (prevent memory leaks)
-  if (componentCache.size < 1000) {
-    componentCache.set(code, result);
-  }
-
-  return result;
-}
-
-// Add a cleanup function to periodically clear the cache
-function clearComponentCache(): void {
-  if (componentCache.size > 800) { // Clear when approaching limit
-    componentCache.clear();
-  }
+function isValidFile(file: string): boolean {
+  return /\.(js|jsx|ts|tsx)$/.test(file);
 }
 
 /**
@@ -83,7 +45,8 @@ const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
     baseFilePath = process.cwd()
   } = options;
 
-  let isDev = false; // Add this flag
+  let isDev = false;
+  const tracker = new ComponentTracker();
 
   return {
     name: 'vite-plugin-react-component-opener',
@@ -101,23 +64,23 @@ const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
       componentCache.clear();
     },
     transform(code: string, id: string): TransformResult | null {
-      if (!isValidFile(id) || !isDev) return null; // Use our flag instead of import.meta.env.DEV
+      if (!isValidFile(id) || !isDev) return null;
 
       try {
-        if (!isReactComponent(code)) {
-          return null; // Skip non-React files
-        }
-
         const normalizedId = normalize(id);
-        const fullPath = normalizedId.startsWith(baseFilePath) ? normalizedId : `${baseFilePath}/${normalizedId}`;
-        const editorUrl = `${editor}/${encodeURIComponent(fullPath)}`;
-        const fileName = parse(id).base;
+        const fullPath = normalizedId.startsWith(baseFilePath) 
+          ? normalizedId 
+          : `${baseFilePath}/${normalizedId}`;
+        
+        return tracker.injectTracking(code, fullPath);
+      } catch (error) {
+        console.error(`Error processing ${id}:`, error);
+        return null;
+      }
+    },
 
-        const injectedCode = `
-import { createElement, Fragment } from 'react';
-import { createPortal } from 'react-dom';
-
-const OpenInEditorButton = ({ fileName, editorUrl }) => {
+    buildEnd() {
+      tracker.dispose();
   const handleClick = (e) => {
     if (e.altKey) {
       e.preventDefault();
