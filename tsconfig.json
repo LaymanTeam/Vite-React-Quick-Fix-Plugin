@@ -13,6 +13,8 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "jsx": "react",
+    "jsxFactory": "createElement",
+    "jsxFragmentFactory": "Fragment",
     "declaration": true,
     "skipLibCheck": true,
     "outDir": "dist",
