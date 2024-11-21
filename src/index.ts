@@ -8,5 +8,6 @@ export type {
   PluginOptions,
   OpenInEditorButtonProps,
   PluginFactory,
-  TransformResult 
+  TransformResult,
+  ComponentInfo
 } from './types';

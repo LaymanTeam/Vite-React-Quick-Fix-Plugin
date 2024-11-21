@@ -1,7 +1,7 @@
 import type { ComponentInfo } from '../tracker/types';
 import { createEditorButton } from './buttonCreator';
 
-const componentCache = new WeakMap<string, string>();
+const componentCache = new Map<string, string>();
 
 export function injectTrackingCode(
   code: string,
