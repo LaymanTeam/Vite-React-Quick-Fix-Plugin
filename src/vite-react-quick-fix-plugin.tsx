@@ -1,7 +1,6 @@
 import type { Plugin } from 'vite';
 import { parse, normalize } from 'path';
 import type { PluginOptions, TransformResult } from './types';
-import { SourceMapInput } from 'rollup';
 import { ComponentTracker } from './tracker/ComponentTracker';
 
 /**
@@ -16,24 +15,6 @@ function isValidFile(file: string): boolean {
 /**
  * Creates a Vite plugin that adds quick-access editor buttons to React components
  * during development.
- * 
- * @param {PluginOptions} options - Plugin configuration options
- * @returns {Plugin} Vite plugin instance
- * 
- * @example
- * ```ts
- * // vite.config.ts
- * import reactQuickFix from 'vite-react-quick-fix-plugin'
- * 
- * export default defineConfig({
- *   plugins: [
- *     reactQuickFix({
- *       editor: 'vscode://file',
- *       baseFilePath: process.cwd()
- *     })
- *   ]
- * })
- * ```
  */
 const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
   const { 
@@ -44,14 +25,21 @@ const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
   const tracker = new ComponentTracker();
 
   return {
-    name: 'vite-plugin-react-component-opener',
-    apply: 'serve',
+    name: 'vite-react-quick-fix-plugin',
+    apply: 'serve', // Only apply in dev mode
 
     configureServer(server) {
+      // Setup HMR handling
       server.ws.on('quick-fix:component-update', () => {
         tracker.refreshComponents();
       });
+
+      // Cleanup on server close
+      server.httpServer?.on('close', () => {
+        tracker.dispose();
+      });
     },
+
     transform(code: string, id: string): TransformResult | null {
       if (!isValidFile(id)) return null;
 
@@ -68,9 +56,14 @@ const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
       }
     },
 
+    // Cleanup when build ends
     buildEnd() {
       tracker.dispose();
     }
+  };
+};
+
+export default reactQuickFixPlugin;
 
 `;
 
