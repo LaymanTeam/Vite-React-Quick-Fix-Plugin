@@ -64,3 +64,9 @@ export type TransformFunction = (
   id: string, 
   options?: { ssr?: boolean }
 ) => Promise<TransformResult | null> | TransformResult | null;
+
+declare global {
+  interface Window {
+    __QUICK_FIX_COMPONENTS__?: Map<string, ComponentInfo>;
+  }
+}

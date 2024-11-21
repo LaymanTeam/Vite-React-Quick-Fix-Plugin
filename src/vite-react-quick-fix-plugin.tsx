@@ -13,10 +13,6 @@ function isValidFile(file: string): boolean {
   return /\.(js|jsx|ts|tsx)$/.test(file);
 }
 
-function isValidFile(file: string): boolean {
-  return /\.(js|jsx|ts|tsx)$/.test(file);
-}
-
 /**
  * Creates a Vite plugin that adds quick-access editor buttons to React components
  * during development.
@@ -45,26 +41,19 @@ const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
     baseFilePath = process.cwd()
   } = options;
 
-  let isDev = false;
   const tracker = new ComponentTracker();
 
   return {
     name: 'vite-plugin-react-component-opener',
-    apply: 'serve', // This already ensures we only run in dev mode
+    apply: 'serve',
 
-    configResolved(config) {
-      isDev = config.command === 'serve'; // Set the flag based on Vite's command
-      
-      if (isDev) {
-        setInterval(clearComponentCache, 300000); // Clear every 5 minutes
-      }
-    },
-
-    buildEnd() {
-      componentCache.clear();
+    configureServer(server) {
+      server.ws.on('quick-fix:component-update', () => {
+        tracker.refreshComponents();
+      });
     },
     transform(code: string, id: string): TransformResult | null {
-      if (!isValidFile(id) || !isDev) return null;
+      if (!isValidFile(id)) return null;
 
       try {
         const normalizedId = normalize(id);
@@ -72,7 +61,7 @@ const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
           ? normalizedId 
           : `${baseFilePath}/${normalizedId}`;
         
-        return tracker.injectTracking(code, fullPath);
+        return tracker.injectTracking(code, fullPath, editor);
       } catch (error) {
         console.error(`Error processing ${id}:`, error);
         return null;
@@ -81,27 +70,7 @@ const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
 
     buildEnd() {
       tracker.dispose();
-  const handleClick = (e) => {
-    if (e.altKey) {
-      e.preventDefault();
-      window.open(editorUrl, '_blank');
     }
-  };
-
-  return createPortal(
-    createElement('button', {
-      onClick: handleClick,
-      style: {
-        position: 'absolute',
-        top: '5px',
-        right: '5px',
-        zIndex: 9999,
-        display: 'none',
-      }
-    }, \`Open \${fileName}\`),
-    document.body
-  );
-};
 
 `;
 

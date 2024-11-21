@@ -4,7 +4,7 @@ export class ComponentTracker {
   private mountedComponents = new Map<string, ComponentInfo>();
   private disposables: (() => void)[] = [];
 
-  injectTracking(code: string, id: string): { code: string; map: null } {
+  injectTracking(code: string, id: string, editorProtocol: string): { code: string; map: null } {
     const componentInfo: ComponentInfo = {
       id: this.generateComponentId(id),
       sourcePath: id,
@@ -12,25 +12,18 @@ export class ComponentTracker {
       timestamp: Date.now()
     };
 
-    // Store component info
-    this.mountedComponents.set(componentInfo.id, componentInfo);
-
-    // Inject tracking code
-    const injectedCode = `
-      import { createElement, useEffect } from 'react';
-      
-      const __trackComponent = (componentInfo) => {
-        window.__QUICK_FIX_COMPONENTS__ = window.__QUICK_FIX_COMPONENTS__ || new Map();
-        window.__QUICK_FIX_COMPONENTS__.set(componentInfo.id, componentInfo);
-      };
-
-      ${code}
-    `;
-
     return {
-      code: injectedCode,
+      code: injectTrackingCode(code, componentInfo, editorProtocol),
       map: null
     };
+  }
+
+  refreshComponents(): void {
+    if (typeof window !== 'undefined') {
+      window.__QUICK_FIX_COMPONENTS__?.forEach((info) => {
+        this.mountedComponents.set(info.id, info);
+      });
+    }
   }
 
   getSourceInfo(componentId: string): ComponentInfo | undefined {
