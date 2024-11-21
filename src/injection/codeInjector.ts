@@ -9,6 +9,8 @@ export function injectTrackingCode(
   componentInfo: ComponentInfo,
   editorProtocol: string
 ): string {
+  // Add debug flag
+  const DEBUG = true;
   if (!code.includes('return')) {
     return code;
   }
@@ -30,7 +32,8 @@ export function injectTrackingCode(
             position: 'relative',
             display: 'inline-block',
             width: '100%',
-            height: '100%'
+            height: '100%',
+            outline: ${DEBUG ? "'1px solid rgba(0,0,255,0.1)'" : 'none'}
           },
           'data-quick-fix-container': true,
           'data-source-path': '${componentInfo.sourcePath}',

@@ -53,6 +53,13 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
     name: 'vite-react-quick-fix-plugin',
     apply: 'serve', // Only active during development
 
+    configResolved(config) {
+      console.log('[vite-react-quick-fix] Plugin initialized in', config.mode, 'mode');
+      if (config.mode !== 'development') {
+        console.warn('[vite-react-quick-fix] Plugin only works in development mode');
+      }
+    },
+
     configureServer(server) {
       // Handle HMR updates
       server.ws.on('quick-fix:component-update', () => {
@@ -69,12 +76,14 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
      * Transform React components to include editor buttons
      */
     transform(code: string, id: string): TransformResult | null {
-      // Skip non-React files
-      if (!isValidFile(id)) {
+      // Add more specific file filtering
+      if (!isValidFile(id) || id.includes('node_modules') || id.includes('.test.')) {
         return null;
       }
 
       try {
+        // Add debug logging
+        console.log(`[vite-react-quick-fix] Processing ${id}`);
         // Normalize file path for consistent handling
         const normalizedId = normalize(id);
         const fullPath = normalizedId.startsWith(baseFilePath)
@@ -82,7 +91,14 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
           : `${baseFilePath}/${normalizedId}`;
 
         // Inject tracking code
-        return tracker.injectTracking(code, fullPath, editorProtocol);
+        const result = tracker.injectTracking(code, fullPath, editorProtocol);
+        
+        // Log successful transformation
+        if (result.code !== code) {
+          console.log(`[vite-react-quick-fix] Successfully transformed ${id}`);
+        }
+
+        return result;
       } catch (error) {
         console.error(`[vite-react-quick-fix] Error processing ${id}:`, error);
         return null;
@@ -94,6 +110,34 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
      */
     buildEnd() {
       tracker.dispose();
+    },
+
+    // Add this to inject required CSS
+    transformIndexHtml() {
+      return [
+        {
+          tag: 'style',
+          attrs: { type: 'text/css' },
+          children: `
+            [data-quick-fix-container] {
+              position: relative !important;
+              display: inline-block !important;
+              width: 100% !important;
+              height: 100% !important;
+            }
+            [data-quick-fix-button] {
+              display: block !important;
+              visibility: hidden;
+              opacity: 0;
+              transition: opacity 0.2s ease, visibility 0.2s ease !important;
+            }
+            [data-quick-fix-container]:hover [data-quick-fix-button] {
+              visibility: visible !important;
+              opacity: 1 !important;
+            }
+          `
+        }
+      ];
     }
   };
 }
