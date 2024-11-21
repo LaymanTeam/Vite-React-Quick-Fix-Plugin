@@ -17,7 +17,6 @@
     "typecheck": "tsc --noEmit",
     "dev": "npm run build -- --watch",
     "semantic-release": "semantic-release",
-    "postinstall": "node scripts/init-semantic-release.js",
     "init-release": "node scripts/init-semantic-release.js"
   },
   "keywords": [
