@@ -69,3 +69,30 @@ export type TransformFunction = (
   id: string, 
   options?: { ssr?: boolean }
 ) => Promise<TransformResult | null> | TransformResult | null;
+import type { Plugin, UserConfig, ConfigEnv } from 'vite';
+
+export interface PluginOptions {
+  /**
+   * URL protocol for the editor
+   * @default 'vscode://file'
+   */
+  editor?: string;
+  
+  /**
+   * Base path for resolving component files
+   * @default process.cwd()
+   */
+  baseFilePath?: string;
+}
+
+export type PluginFactory = (options?: PluginOptions) => Plugin;
+
+export interface TransformResult {
+  code: string;
+  map: any | null;
+}
+
+export interface OpenInEditorButtonProps {
+  fileName: string;
+  editorUrl: string;
+}

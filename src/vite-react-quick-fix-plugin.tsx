@@ -1,4 +1,4 @@
-import { Plugin } from 'vite';
+import type { Plugin, UserConfig, ConfigEnv } from 'vite';
 import { parse, normalize } from 'path';
 import type { PluginOptions, TransformResult } from './types';
 import { SourceMapInput } from 'rollup';
@@ -87,9 +87,9 @@ export default function reactQuickFix(options: PluginOptions = {}): Plugin {
 
   return {
     name: 'vite-plugin-react-component-opener',
-    apply: 'serve', // This already ensures we only run in dev mode
+    apply: 'serve' as const, // This already ensures we only run in dev mode
 
-    configResolved(config) {
+    configResolved(config: UserConfig) {
       isDev = config.command === 'serve'; // Set the flag based on Vite's command
       
       if (isDev) {
