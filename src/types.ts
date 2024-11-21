@@ -38,7 +38,7 @@ export type PluginFactory = (options?: PluginOptions) => Plugin;
  */
 export interface TransformResult {
   code: string;
-  map?: SourceMapInput | null;
+  map: SourceMapInput | null;
 }
 
 /**
@@ -57,11 +57,6 @@ export type ComponentDetector = (code: string) => boolean;
 export type ReactPattern = RegExp;
 
 /**
- * Transform function result
- */
-export type TransformFunctionResult = TransformResult | null;
-
-/**
  * Transform function type
  */
 export type TransformFunction = (
@@ -69,30 +64,3 @@ export type TransformFunction = (
   id: string, 
   options?: { ssr?: boolean }
 ) => Promise<TransformResult | null> | TransformResult | null;
-import type { Plugin, UserConfig, ConfigEnv } from 'vite';
-
-export interface PluginOptions {
-  /**
-   * URL protocol for the editor
-   * @default 'vscode://file'
-   */
-  editor?: string;
-  
-  /**
-   * Base path for resolving component files
-   * @default process.cwd()
-   */
-  baseFilePath?: string;
-}
-
-export type PluginFactory = (options?: PluginOptions) => Plugin;
-
-export interface TransformResult {
-  code: string;
-  map: any | null;
-}
-
-export interface OpenInEditorButtonProps {
-  fileName: string;
-  editorUrl: string;
-}
