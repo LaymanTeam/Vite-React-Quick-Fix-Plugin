@@ -54,8 +54,10 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
     apply: 'serve', // Only active during development
 
     configResolved(config) {
+      // eslint-disable-next-line no-console
       console.log('[vite-react-quick-fix] Plugin initialized in', config.mode, 'mode');
       if (config.mode !== 'development') {
+        // eslint-disable-next-line no-console
         console.warn('[vite-react-quick-fix] Plugin only works in development mode');
       }
     },
@@ -83,6 +85,7 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
 
       try {
         // Add debug logging
+        // eslint-disable-next-line no-console
         console.log(`[vite-react-quick-fix] Processing ${id}`);
         // Normalize file path for consistent handling
         const normalizedId = normalize(id);
@@ -95,11 +98,13 @@ export function reactQuickFixPlugin(options: PluginOptions = {}): Plugin {
         
         // Log successful transformation
         if (result.code !== code) {
+          // eslint-disable-next-line no-console
           console.log(`[vite-react-quick-fix] Successfully transformed ${id}`);
         }
 
         return result;
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(`[vite-react-quick-fix] Error processing ${id}:`, error);
         return null;
       }
