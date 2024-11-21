@@ -5,9 +5,9 @@ export class ComponentTracker {
   private mountedComponents = new Map<string, ComponentInfo>();
   private disposables: (() => void)[] = [];
 
-  injectTracking(code: string, id: string, editorProtocol: string): { code: string; map: null } {
-    // Only inject tracking for React component files
-    if (!this.isReactComponent(code)) {
+  injectTracking(code: string, id: string, editorProtocol: string): { code: string; map: SourceMap | null } {
+    // Only process files that look like components (have return statements)
+    if (!code.includes('return')) {
       return { code, map: null };
     }
 
@@ -18,9 +18,21 @@ export class ComponentTracker {
       timestamp: Date.now()
     };
 
+    const injectedCode = injectTrackingCode(code, componentInfo, editorProtocol);
+
+    // Only generate sourcemap if we modified the code
+    const map: SourceMap = code !== injectedCode ? {
+      version: 3,
+      sources: [id],
+      names: [],
+      mappings: '',
+      file: id,
+      sourcesContent: [code]
+    } : null;
+
     return {
-      code: injectTrackingCode(code, componentInfo, editorProtocol),
-      map: null
+      code: injectedCode,
+      map
     };
   }
 

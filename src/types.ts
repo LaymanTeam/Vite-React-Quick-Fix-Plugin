@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite';
-import type { SourceMapInput } from 'rollup';
+import type { SourceMap, SourceMapInput } from 'rollup';
 import type { ComponentInfo } from './tracker/types';
 
 export type { ComponentInfo };  // Re-export for convenience
