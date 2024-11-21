@@ -11,8 +11,7 @@ export function generateSourceMap(
   });
 
   const originalLines = originalCode.split('\n');
-  const transformedLines = transformedCode.split('\n');
-
+  
   // Basic mapping - maps each line to corresponding line
   originalLines.forEach((_, index) => {
     generator.addMapping({

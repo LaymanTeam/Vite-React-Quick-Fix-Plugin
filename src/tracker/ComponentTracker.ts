@@ -1,4 +1,4 @@
-import type { SourceMap } from 'rollup';
+import type { SourceMap, SourceMapInput } from 'rollup';
 import type { ComponentInfo } from './types';
 import { injectTrackingCode } from '../injection/codeInjector';
 import { generateSourceMap } from '../utils/sourceMapGenerator';
