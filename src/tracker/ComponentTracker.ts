@@ -11,6 +11,7 @@ export class ComponentTracker {
     this.debug = options.debug || false;
   }
 
+  /* @internal */
   private log(...args: unknown[]) {
     if (this.debug) {
       // Using console.log is actually intended here for debugging
