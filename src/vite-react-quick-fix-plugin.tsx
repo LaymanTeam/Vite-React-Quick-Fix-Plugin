@@ -162,7 +162,7 @@ const OpenInEditorButton = ({ fileName, editorUrl }) => {
                     createElement('style', null, 
                       'div:hover > button { display: block !important; }'
                     )
-                  ]
+                  ].filter(Boolean)
                 );
               };`
             : `export const ${componentName} = (props) => {
@@ -179,7 +179,7 @@ const OpenInEditorButton = ({ fileName, editorUrl }) => {
                     createElement('style', null, 
                       'div:hover > button { display: block !important; }'
                     )
-                  ]
+                  ].filter(Boolean)
                 );
               };`;
           
