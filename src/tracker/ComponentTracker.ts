@@ -1,4 +1,4 @@
-import type { SourceMap, SourceMapInput } from 'rollup';
+import type { SourceMap } from 'rollup';
 import type { ComponentInfo } from './types';
 import { injectTrackingCode } from '../injection/codeInjector';
 import { generateSourceMap } from '../utils/sourceMapGenerator';
@@ -20,8 +20,15 @@ export class ComponentTracker {
       names: [],
       mappings: generateSourceMap(code, injectedCode, id),
       file: id,
-      sourcesContent: [code]
-    } : null;
+      sourcesContent: [code],
+      toString() {
+        return JSON.stringify(this);
+      },
+      toUrl() {
+        return 'data:application/json;charset=utf-8;base64,' + 
+               Buffer.from(this.toString()).toString('base64');
+      }
+    } as SourceMap : null;
 
     return { code: injectedCode, map };
   }

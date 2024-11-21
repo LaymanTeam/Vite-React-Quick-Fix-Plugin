@@ -2,7 +2,7 @@ import { SourceMapGenerator } from 'source-map';
 
 export function generateSourceMap(
   originalCode: string,
-  transformedCode: string,
+  _transformedCode: string, // Prefix with _ to indicate intentionally unused
   filename: string
 ): string {
   const generator = new SourceMapGenerator({
