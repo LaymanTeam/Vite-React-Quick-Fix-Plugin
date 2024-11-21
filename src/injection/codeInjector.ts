@@ -1,0 +1,42 @@
+import type { ComponentInfo } from '../tracker/types';
+import { createEditorButton } from './buttonCreator';
+
+export function injectTrackingCode(
+  code: string,
+  componentInfo: ComponentInfo,
+  editorProtocol: string
+): string {
+  const buttonCode = createEditorButton(componentInfo, editorProtocol);
+  
+  return `
+    import { createElement, Fragment, useEffect } from 'react';
+    
+    // Original code
+    ${code}
+
+    // Inject tracking wrapper
+    const __withTracking = (WrappedComponent) => {
+      return (props) => {
+        useEffect(() => {
+          window.__QUICK_FIX_COMPONENTS__ = window.__QUICK_FIX_COMPONENTS__ || new Map();
+          window.__QUICK_FIX_COMPONENTS__.set('${componentInfo.id}', ${JSON.stringify(componentInfo)});
+          return () => {
+            window.__QUICK_FIX_COMPONENTS__.delete('${componentInfo.id}');
+          };
+        }, []);
+
+        return createElement(
+          'div',
+          { 
+            style: { position: 'relative' },
+            'data-quick-fix-container': true
+          },
+          [
+            createElement(WrappedComponent, props),
+            ${buttonCode}
+          ]
+        );
+      };
+    };
+  `;
+}
