@@ -1,4 +1,4 @@
-import type { ComponentInfo } from '../tracker/types';
+import type { ComponentInfo } from '../types';
 import { createEditorButton } from './buttonCreator';
 
 const componentCache = new Map<string, string>();

@@ -1,11 +1,8 @@
-export interface ComponentInfo {
-  id: string;
-  sourcePath: string;
-  fileName: string;
-  timestamp: number;
-}
+import type { ComponentInfo } from '../types';
 
 export interface TrackerOptions {
   debug?: boolean;
   cleanupInterval?: number;
 }
+
+export type { ComponentInfo };
