@@ -114,8 +114,8 @@ const reactQuickFixPlugin = function(options: PluginOptions = {}): Plugin {
         const fileName = parse(id).base;
 
         const injectedCode = `
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { createElement, Fragment } from 'react';
+import { createPortal } from 'react-dom';
 
 const OpenInEditorButton = ({ fileName, editorUrl }) => {
   const handleClick = (e) => {
@@ -125,19 +125,17 @@ const OpenInEditorButton = ({ fileName, editorUrl }) => {
     }
   };
 
-  return ReactDOM.createPortal(
-    <button
-      onClick={handleClick}
-      style={{
+  return createPortal(
+    createElement('button', {
+      onClick: handleClick,
+      style: {
         position: 'absolute',
         top: '5px',
         right: '5px',
         zIndex: 9999,
         display: 'none',
-      }}
-    >
-      Open {fileName}
-    </button>,
+      }
+    }, \`Open \${fileName}\`),
     document.body
   );
 };
