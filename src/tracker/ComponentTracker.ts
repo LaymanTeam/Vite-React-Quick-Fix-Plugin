@@ -1,3 +1,4 @@
+import type { SourceMap } from 'rollup';
 import type { ComponentInfo } from './types';
 import { injectTrackingCode } from '../injection/codeInjector';
 import { generateSourceMap } from '../utils/sourceMapGenerator';
@@ -29,11 +30,13 @@ export class ComponentTracker {
     return `${sourcePath}-${Date.now()}`;
   }
 
-  dispose(): void {} // Cleanup if needed
+  dispose(): void {
+    // This method exists for cleanup purposes but currently has no implementation
+    // as our tracking is file-based rather than runtime-based
+  }
 
   refreshComponents(): void {
-    // Since we're using file-based tracking now rather than runtime tracking,
-    // we just need to trigger a HMR update
-    // This method is called when components need to be re-processed
+    // This method exists for HMR updates but currently has no implementation
+    // as our tracking is file-based rather than runtime-based
   }
 }
